@@ -21,7 +21,7 @@
 ###paso 1, ingresar y configurar los datos
 ##################################################
 
-df <- read.csv("estresimp.csv")
+df <- read.csv("2020-utalca-acluster/estresimp.csv")
 cat(paste(colnames(df), collapse='\n' ) ) #list of vars
 
 

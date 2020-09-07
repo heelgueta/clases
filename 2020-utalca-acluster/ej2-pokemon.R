@@ -18,7 +18,7 @@
 ###paso 1, ingresar y configurar los datos
 ##################################################
 
-df <- read.csv("pokemon.csv")
+df <- read.csv("2020-utalca-acluster/pokemon.csv")
 df <- dplyr::filter(df, !grepl('Mega', Name)) #filter out "mega" pokemon
 df <- df[which(df$Generation==1),] #just keep gen1
 names <- df[,2]

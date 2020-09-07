@@ -19,13 +19,13 @@
 ###paso 1, ingresar y configurar los datos
 ##################################################
 #cargar la matriz completa
-df <- read.csv("planets.csv")
+df <- read.csv("2020-utalca-acluster/planets.csv")
 #escoger sólo aquellas variables de interés
 cat(colnames(df), sep = "\n")
-df <- read.csv("planets.csv")[,c(2:5,9,19)]
+df <- read.csv("2020-utalca-acluster/planets.csv")[,c(2:5,9,19)]
 df
 #darle nombre a las filas
-rownames(df) <- read.csv("planets.csv")[,1]
+rownames(df) <- read.csv("2020-utalca-acluster/planets.csv")[,1]
 #si es necesario, estandarizar las variables
 df <- scale(df)
 df <- as.data.frame(df)
