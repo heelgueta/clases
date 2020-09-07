@@ -74,7 +74,9 @@ head(df)
 
 data_long <- tidyr::gather(df, caracteristica, valor, HP:Speed, factor_key=TRUE)
 data_long
++
 
+	# :)
 ggplot2::ggplot(data_long, ggplot2::aes(as.factor(x = caracteristica), y = valor,group=cluster, colour = cluster)) + 
 	ggplot2::stat_summary(fun = mean, geom="pointrange", size = 1)+
 	ggplot2::stat_summary(geom="line")  #+ ggplot2::geom_point(ggplot2::aes(shape=cluster))
