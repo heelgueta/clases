@@ -18,12 +18,14 @@
 ###paso 1, ingresar y configurar los datos
 ##################################################
 
-df <- read.csv("2020-utalca-acluster/pokemon.csv")
+df <- read.csv("datasets/pokemon.csv")
 df <- dplyr::filter(df, !grepl('Mega', Name)) #filter out "mega" pokemon
 df <- df[which(df$Generation==1),] #just keep gen1
 names <- df[,2]
 cat(paste(colnames(df), collapse='\n' ) ) #list of vars
 df <- df[,c(6:11)]
+df <- df[,c(6:7)]
+
 rownames(df) <- names
 
 #si es necesario, estandarizar las variables
@@ -51,9 +53,10 @@ factoextra::fviz_nbclust(resnumclust)
 ###paso 3, extraer/examinar los clusters
 ##################################################
 #ejecutar clustering según la cantidad de clústers escogidos
-clus <- 3
+clus <- 2
 	 
 #?kmeans
+?kmeans
 kmeans(df, centers = clus, nstart = 25)
 k <- kmeans(df, centers = clus, nstart = 25)
 

@@ -40,57 +40,39 @@ df <- df[which(df$Speed>-3 & df$Speed < 3), ]
 
 df
 
-##################################################
-###paso 2, bic clustering?
-##################################################
-library(mclust)
-BIC <- mclust::mclustBIC(df)
-plot(BIC)
-summary(BIC)
+library(tidyLPA)
+library(dplyr)
 
-#ICL <- mclust::mclustICL(df)
-#plot(ICL)
-#summary(ICL)
-
-mod <- mclust::Mclust(df, modelNames = "VVE", G = 2, x = mclust::mclustBIC(df))
-summary(mod)
-
-#probabilities
-z <- as.data.frame(mod$z)
-view(z)
-
-mod$uncertainty
-
-#mclust::mclustBootstrapLRT(df, modelName = "VVE")
+colnames(df)
 
 
-
-#VISUALIZE
-library(tidyverse)
-
-means <- data.frame(mod$parameters$mean) %>%
-	rownames_to_column() %>%
-	rename(Characteristic = rowname) %>%
-	pivot_longer(cols = c(X1, X2), names_to = "Profile", values_to = "Mean") %>%
-	mutate(Mean = round(Mean, 2))
-
-means %>%
-	ggplot(aes(Characteristic, Mean, group = Profile, color = Profile)) +
-	geom_point(size = 2.25) +
-	geom_line(size = 1.25) +
-	scale_x_discrete(limits = c("HP","Attack","Defense","Speed")) +
-	labs(x = NULL, y = "Standardized mean") +
-	theme_bw(base_size = 14) +
-	theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "top")
-
-#other viz
-plot(mod, what = "classification")
-plot(mod, what="density")
-moddr <- mclust::MclustDR(mod)
-plot(moddr, what = "scatterplot")
-plot(moddr, what = "boundaries", ngrid = 200)
+df %>%
+	single_imputation() %>%
+	estimate_profiles(1:5, 
+										variances = c("equal", "varying"),
+										covariances = c("zero", "varying")) %>%
+	compare_solutions(statistics = c("AIC", "BIC","AWE","CLC","KIC"))
 
 
-###extract?
-df$clas <- mod$classification
-df
+df %>%
+	single_imputation() %>%
+	estimate_profiles(3)
+
+#?estimate_profiles;
+#models are
+#1. Equal variances and covariances fixed to 0
+#2. Varying variances and covariances fixed to 0
+#3. Equal variances and equal covariances
+#4. Varying variances and equal covariances (not able to be fit w/ mclust)
+#5. Equal variances and varying covariances (not able to be fit w/ mclust)
+#6. Varying variances and varying covariances
+
+
+
+df %>%
+	single_imputation() %>%
+	scale() %>%
+	estimate_profiles(3) %>% 
+	plot_profiles()
+
+

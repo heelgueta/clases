@@ -22,9 +22,6 @@ cor(df)
 
 
 
-
-
-
 factoextra::get_dist(df, method = "euclidean")
 m.distancia <- factoextra::get_dist(df, method = "euclidean")
 factoextra::fviz_dist(m.distancia, 
@@ -33,6 +30,8 @@ factoextra::fviz_dist(m.distancia,
 #examinar diferentes sugerencias sobre cuántos clústers extraer
 factoextra::fviz_nbclust(df, kmeans, method = "wss", k.max=7) #codo
 factoextra::fviz_nbclust(df, kmeans, method = "silhouette", k.max=7) #silueta
+resnumclust <- NbClust::NbClust(df, distance = "euclidean", min.nc=2, max.nc=10, method = "kmeans", index = "alllong")
+factoextra::fviz_nbclust(resnumclust)
 
 ##################################################
 ###paso 3, extraer/examinar los clusters
@@ -44,7 +43,6 @@ k <- kmeans(df, centers = clus, nstart = 25)
 
 #graficar los clusters
 factoextra::fviz_cluster(k, data = df)
-?factoextra::fviz_cluster
 
 #dendograma
 tree <- factoextra::hcut(df, k = clus, stand = TRUE)
@@ -56,13 +54,9 @@ factoextra::fviz_dend(tree)
 df$cluster<-as.factor(k$cluster)
 df
 
-data_long <- tidyr::gather(df, caracteristica, valor, mass:number_of_moons, factor_key=TRUE)
+data_long <- tidyr::gather(df, caracteristica, valor, intel:succe, factor_key=TRUE)
 data_long
 
 ggplot2::ggplot(data_long, ggplot2::aes(as.factor(x = caracteristica), y = valor,group=cluster, colour = cluster)) + 
 	ggplot2::stat_summary(fun = mean, geom="pointrange", size = 1) +
-	ggplot2::stat_summary(geom="line")
-
-ggplot2::ggplot(data_long, ggplot2::aes(as.factor(x = caracteristica), y = valor,group=cluster, colour = cluster)) + 
-	ggplot2::stat_summary(fun = mean, geom="pointrange", size = 1, ggplot2::aes(shape = cluster))+
 	ggplot2::stat_summary(geom="line")
